@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JOINNEX SOLUTIONS — Telecom Retail Operations, Engineered.</title>
+<meta name="description" content="JOINNEX Solutions powers 900+ telecom retail stores with live surveillance, loss prevention, reconciliation, and workforce operations across 8 major U.S. carriers." />
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts: Inter for crisp corporate typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+<script>
+  // Extend Tailwind with our brand tokens.
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          magenta: {
+            DEFAULT: '#E20074',
+            50:  '#FFE5F2',
+            100: '#FCC4DF',
+            500: '#E20074',
+            600: '#C40066',
+            700: '#A30055',
+          },
+          charcoal: {
+            DEFAULT: '#1A1A1A',
+            light:   '#2B2B2B',
+            soft:    '#4A4A4A',
+            muted:   '#6B7280',
+          },
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+        boxShadow: {
+          'premium':       '0 4px 24px -8px rgba(0,0,0,0.06), 0 2px 8px -2px rgba(0,0,0,0.04)',
+          'premium-hover': '0 20px 40px -12px rgba(226,0,116,0.18), 0 8px 16px -8px rgba(0,0,0,0.08)',
+          'card':          '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  /* ---------- Base typography ---------- */
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', system-ui, sans-serif; color: #1A1A1A; background:#ffffff; -webkit-font-smoothing: antialiased; }
+
+  /* ---------- Custom ultra-thin magenta scrollbar ---------- */
+  /* Firefox */
+  html { scrollbar-width: none; }
+  /* Chromium / WebKit — hide native scrollbar entirely */
+  ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+  /* Custom floating scrollbar element rendered via JS */
+  #jx-scrollbar-track {
+    position: fixed;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100vh;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+  #jx-scrollbar-thumb {
+    position: absolute;
+    right: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #E20074 0%, #A30055 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(226,0,116,0.6);
+    transition: opacity .2s ease;
+  }
+
+  /* ---------- Subtle background grid for hero ---------- */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(226,0,116,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(226,0,116,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center center;
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+  }
+
+  /* ---------- Brand card micro-interactions ---------- */
+  .brand-card {
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease;
+    will-change: transform;
+  }
+  .brand-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -16px rgba(0,0,0,0.12), 0 4px 12px -4px rgba(226,0,116,0.15);
+    border-color: #E20074;
+  }
+  .brand-card.active {
+    background: linear-gradient(135deg, #E20074 0%, #A30055 100%);
+    border-color: #E20074;
+    color: white;
+    box-shadow: 0 20px 40px -16px rgba(226,0,116,0.45);
+    transform: translateY(-4px);
+  }
+  .brand-card.active .brand-name,
+  .brand-card.active .brand-tag { color: white; }
+  .brand-card.active .brand-dot { background: white; }
+
+  /* ---------- Service card animations ---------- */
+  .service-card {
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px -12px rgba(0,0,0,0.10), 0 4px 8px -2px rgba(226,0,116,0.08);
+    border-color: #E20074;
+  }
+  .service-card:hover .service-icon-wrap {
+    background: linear-gradient(135deg, #E20074 0%, #A30055 100%);
+  }
+  .service-card:hover .service-icon-wrap svg { color: white; }
+
+  /* Fade-in animation when services swap */
+  .fade-in {
+    animation: fadeInUp .45s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger child cards */
+  .fade-in:nth-child(1) { animation-delay: 0.00s; }
+  .fade-in:nth-child(2) { animation-delay: 0.06s; }
+  .fade-in:nth-child(3) { animation-delay: 0.12s; }
+  .fade-in:nth-child(4) { animation-delay: 0.18s; }
+  .fade-in:nth-child(5) { animation-delay: 0.24s; }
+  .fade-in:nth-child(6) { animation-delay: 0.30s; }
+  .fade-in:nth-child(7) { animation-delay: 0.36s; }
+  .fade-in:nth-child(8) { animation-delay: 0.42s; }
+
+  /* ---------- Stat counter pulse ---------- */
+  .stat-card {
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -10px rgba(226,0,116,0.18);
+  }
+
+  /* ---------- Custom range slider (magenta) ---------- */
+  input[type="range"].jx-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #F3F4F6;
+    border-radius: 999px;
+    outline: none;
+  }
+  input[type="range"].jx-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #E20074;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(226,0,116,0.35);
+    transition: transform .15s ease;
+  }
+  input[type="range"].jx-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+  input[type="range"].jx-slider::-moz-range-thumb {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #E20074;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(226,0,116,0.35);
+  }
+
+  /* ---------- Section reveal on scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* Marquee-ish breathing dot */
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #E20074;
+    box-shadow: 0 0 0 0 rgba(226,0,116,0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(226,0,116,0.55); }
+    70%  { box-shadow: 0 0 0 10px rgba(226,0,116,0); }
+    100% { box-shadow: 0 0 0 0 rgba(226,0,116,0); }
+  }
+</style>
+</head>
+
+<body class="bg-white text-charcoal">
+
+<!-- Floating custom magenta scrollbar -->
+<div id="jx-scrollbar-track">
+  <div id="jx-scrollbar-thumb"></div>
+</div>
+
+<!-- ====================== NAV ====================== -->
+<nav class="fixed top-0 inset-x-0 z-50 bg-white/85 backdrop-blur-md border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-magenta to-magenta-700 flex items-center justify-center shadow-md">
+        <span class="text-white font-extrabold text-lg leading-none">J</span>
+      </div>
+      <div class="leading-tight">
+        <div class="text-[15px] font-extrabold tracking-tight">JOINNEX</div>
+        <div class="text-[10px] uppercase tracking-[0.18em] text-charcoal-muted">Solutions</div>
+      </div>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-charcoal-soft">
+      <a href="#brands"   class="hover:text-magenta transition-colors">Brands</a>
+      <a href="#services" class="hover:text-magenta transition-colors">Services</a>
+      <a href="#calc"     class="hover:text-magenta transition-colors">ROI Calculator</a>
+      <a href="#contact"  class="hover:text-magenta transition-colors">Contact</a>
+    </div>
+
+    <a href="#contact"
+       class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-magenta hover:bg-magenta-600 text-white text-sm font-semibold transition-colors shadow-sm">
+      Request a Quote
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ====================== HERO ====================== -->
+<section id="top" class="relative pt-28 pb-20 lg:pt-36 lg:pb-28 overflow-hidden">
+  <div class="absolute inset-0 grid-bg pointer-events-none"></div>
+  <div class="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-magenta/5 blur-3xl pointer-events-none"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- Pill badge -->
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-magenta/8 border border-magenta/15">
+      <span class="pulse-dot"></span>
+      <span class="text-[12px] font-semibold tracking-wide text-magenta-700">LIVE OPERATIONS · NATIONWIDE COVERAGE</span>
+    </div>
+
+    <h1 class="mt-6 text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
+      5+ Years of Excellence in
+      <span class="bg-gradient-to-r from-magenta to-magenta-700 bg-clip-text text-transparent">Telecommunication Operations.</span>
+    </h1>
+
+    <p class="mt-6 max-w-3xl text-lg md:text-xl text-charcoal-soft leading-relaxed">
+      Handled over <span class="font-semibold text-charcoal">900+ stores'</span> smooth operations nationwide.
+      We optimize retail performance, secure inventory, and streamline your workforce — so you scale without the operational chaos.
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="#contact"
+         class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-magenta hover:bg-magenta-600 text-white font-semibold shadow-lg shadow-magenta/25 transition-all hover:-translate-y-0.5">
+        Talk to Operations
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="#services"
+         class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white text-charcoal font-semibold border border-gray-200 hover:border-magenta hover:text-magenta transition-colors">
+        Explore Services
+      </a>
+    </div>
+
+    <!-- Credibility stat grid -->
+    <div class="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+
+      <div class="stat-card bg-white rounded-2xl border border-gray-100 p-6 shadow-premium">
+        <div class="flex items-center gap-2 text-magenta">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21V7a2 2 0 012-2h4l2-2h2l2 2h4a2 2 0 012 2v14M3 21h18M7 21V11m4 10V11m4 10V11m4 10V11"/>
+          </svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider">Stores</span>
+        </div>
+        <div class="mt-3 text-4xl font-extrabold text-charcoal" data-counter="900" data-suffix="+">0</div>
+        <div class="mt-1 text-sm text-charcoal-muted">Active Retail Stores Handled</div>
+      </div>
+
+      <div class="stat-card bg-white rounded-2xl border border-gray-100 p-6 shadow-premium">
+        <div class="flex items-center gap-2 text-magenta">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider">Experience</span>
+        </div>
+        <div class="mt-3 text-4xl font-extrabold text-charcoal"><span data-counter="5">0</span>+ <span class="text-2xl">Years</span></div>
+        <div class="mt-1 text-sm text-charcoal-muted">Industry Experience</div>
+      </div>
+
+      <div class="stat-card bg-white rounded-2xl border border-gray-100 p-6 shadow-premium">
+        <div class="flex items-center gap-2 text-magenta">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.6 5A9 9 0 1112 3a9 9 0 018.6 12z"/>
+          </svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider">Accuracy</span>
+        </div>
+        <div class="mt-3 text-4xl font-extrabold text-charcoal"><span data-counter="99.4" data-decimals="1">0</span>%</div>
+        <div class="mt-1 text-sm text-charcoal-muted">Revenue Reconciliation Accuracy</div>
+      </div>
+
+      <div class="stat-card bg-white rounded-2xl border border-gray-100 p-6 shadow-premium">
+        <div class="flex items-center gap-2 text-magenta">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.46 12C3.73 7.94 7.52 5 12 5s8.27 2.94 9.54 7c-1.27 4.06-5.06 7-9.54 7s-8.27-2.94-9.54-7z"/>
+          </svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider">Monitoring</span>
+        </div>
+        <div class="mt-3 text-4xl font-extrabold text-charcoal">24/7<span class="text-2xl">/365</span></div>
+        <div class="mt-1 text-sm text-charcoal-muted">Live Surveillance Monitoring</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====================== BRANDS MATRIX ====================== -->
+<section id="brands" class="py-20 lg:py-24 bg-gray-50/60 border-y border-gray-100">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="reveal max-w-3xl">
+      <div class="text-[12px] font-bold tracking-[0.2em] text-magenta uppercase">Carrier Coverage</div>
+      <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight">Operating across 8 major U.S. carriers.</h2>
+      <p class="mt-3 text-charcoal-soft text-lg">Select a brand to see the exact operations stack we run for it. Metro by T-Mobile receives our full 8-service expansion.</p>
+    </div>
+
+    <div id="brandGrid" class="reveal mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ====================== SERVICES GRID ====================== -->
+<section id="services" class="py-20 lg:py-24">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="reveal flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        <div class="text-[12px] font-bold tracking-[0.2em] text-magenta uppercase">Operations Stack</div>
+        <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight">
+          Services for <span id="activeBrandName" class="text-magenta">Metro by T-Mobile</span>
+        </h2>
+        <p class="mt-3 text-charcoal-soft text-lg">
+          <span id="servicesCount">8</span> specialized services, delivered by trained operations analysts and integrated directly into your daily workflows.
+        </p>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-magenta/8 border border-magenta/15">
+        <span class="pulse-dot"></span>
+        <span class="text-[12px] font-semibold tracking-wide text-magenta-700">ACTIVE STACK</span>
+      </div>
+    </div>
+
+    <div id="servicesGrid" class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ====================== ROI CALCULATOR ====================== -->
+<section id="calc" class="py-20 lg:py-24 bg-gradient-to-b from-gray-50/60 to-white border-y border-gray-100">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8">
+    <div class="reveal text-center max-w-2xl mx-auto">
+      <div class="text-[12px] font-bold tracking-[0.2em] text-magenta uppercase">ROI Calculator</div>
+      <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight">Calculate Your Operational Savings</h2>
+      <p class="mt-3 text-charcoal-soft text-lg">Drag the slider to model your portfolio. Estimates are based on JOINNEX benchmark data across 900+ active retail stores.</p>
+    </div>
+
+    <div class="reveal mt-12 bg-white rounded-3xl border border-gray-100 shadow-premium p-6 md:p-10">
+
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-charcoal-muted">Number of Stores You Own</div>
+          <div class="mt-1 text-charcoal-soft text-sm">Move the slider to fit your portfolio.</div>
+        </div>
+        <div class="text-right">
+          <div class="text-5xl font-extrabold text-charcoal" id="storesDisplay">10</div>
+          <div class="text-xs text-charcoal-muted">Stores</div>
+        </div>
+      </div>
+
+      <input type="range" min="1" max="50" value="10" class="jx-slider" id="storesSlider" />
+      <div class="flex justify-between mt-2 text-[11px] font-medium text-charcoal-muted">
+        <span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+</span>
+      </div>
+
+      <!-- Output -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+        <div class="rounded-2xl border border-gray-100 p-6 bg-gradient-to-br from-white to-gray-50/60">
+          <div class="flex items-center gap-2 text-magenta">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="text-[11px] font-bold uppercase tracking-wider">Hours Saved / Month</span>
+          </div>
+          <div class="mt-3 text-5xl font-extrabold text-charcoal" id="hoursSaved">250</div>
+          <div class="mt-1 text-sm text-charcoal-muted">Operational hours redirected back to revenue-generating work.</div>
+        </div>
+
+        <div class="rounded-2xl border border-magenta/20 p-6 bg-gradient-to-br from-magenta/5 to-white">
+          <div class="flex items-center gap-2 text-magenta">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V6m0 12v-2m0-8a3 3 0 013 3M9 12a3 3 0 003-3"/>
+              <circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="text-[11px] font-bold uppercase tracking-wider">Revenue Leakage Prevented</span>
+          </div>
+          <div class="mt-3 text-5xl font-extrabold text-magenta" id="revenueSaved">$45,000</div>
+          <div class="mt-1 text-sm text-charcoal-muted">Estimated per month, based on reconciliation + loss prevention benchmarks.</div>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-gray-100">
+        <p class="text-sm text-charcoal-muted">Want an exact, store-by-store audit? We'll deliver one in 7 business days.</p>
+        <a href="#contact" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-magenta hover:bg-magenta-600 text-white font-semibold shadow-md transition-colors">
+          Get Custom Analysis
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== CONTACT FORM ====================== -->
+<section id="contact" class="py-20 lg:py-24">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8 grid lg:grid-cols-5 gap-10">
+
+    <div class="reveal lg:col-span-2">
+      <div class="text-[12px] font-bold tracking-[0.2em] text-magenta uppercase">Request a Quote</div>
+      <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight">Let's run your operations like clockwork.</h2>
+      <p class="mt-4 text-charcoal-soft text-lg">Tell us about your portfolio. A JOINNEX strategist will respond within one business day with a tailored proposal.</p>
+
+      <div class="mt-8 space-y-4">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-magenta/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-sm font-semibold">Email</div>
+            <div class="text-sm text-charcoal-muted">contact@joinnexsolutions.com</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-magenta/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.515l.91 3.64a2 2 0 01-.45 1.95L8.12 11.88a16 16 0 006 6l1.78-1.56a2 2 0 011.95-.45l3.64.91A2 2 0 0123 18.72V21a2 2 0 01-2 2A18 18 0 013 5z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-sm font-semibold">Operations Hotline</div>
+            <div class="text-sm text-charcoal-muted">Available 24 / 7 / 365</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-magenta/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.6 5A9 9 0 1112 3a9 9 0 018.6 12z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-sm font-semibold">SLA-Backed</div>
+            <div class="text-sm text-charcoal-muted">Contractually guaranteed response times.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal lg:col-span-3">
+      <form id="quoteForm" class="bg-white rounded-2xl border border-gray-100 shadow-premium p-6 md:p-8">
+        <div id="formMsg" class="hidden mb-4 px-4 py-3 rounded-lg text-sm font-medium"></div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">Full Name *</label>
+            <input name="full_name" required type="text" placeholder="Jane Doe"
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">Company *</label>
+            <input name="company" required type="text" placeholder="Acme Wireless Holdings"
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">Work Email *</label>
+            <input name="email" required type="email" placeholder="jane@company.com"
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">Phone</label>
+            <input name="phone" type="tel" placeholder="+1 (555) 010-1234"
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">Brand *</label>
+            <select name="brand" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition bg-white">
+              <option value="">Select your carrier…</option>
+              <option>Verizon Wireless</option>
+              <option>AT&amp;T</option>
+              <option>T-Mobile</option>
+              <option>Visible</option>
+              <option>Cricket Wireless</option>
+              <option>Total Wireless</option>
+              <option>Boost Mobile</option>
+              <option selected>Metro by T-Mobile</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">Number of Stores</label>
+            <input name="stores" type="number" min="1" placeholder="e.g. 25"
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition" />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-charcoal-muted mb-1.5">What do you need help with?</label>
+          <textarea name="message" rows="4" placeholder="Tell us about your current pain points…"
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-magenta focus:ring-2 focus:ring-magenta/15 outline-none transition resize-none"></textarea>
+        </div>
+
+        <button type="submit"
+          class="mt-6 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-magenta hover:bg-magenta-600 text-white font-semibold shadow-lg shadow-magenta/25 transition-all hover:-translate-y-0.5">
+          Request My Custom Quote
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+
+        <p class="mt-3 text-xs text-charcoal-muted text-center">We respect your data. No spam — ever.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="border-t border-gray-100 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-magenta to-magenta-700 flex items-center justify-center">
+        <span class="text-white font-extrabold text-sm">J</span>
+      </div>
+      <div class="text-sm">
+        <span class="font-extrabold tracking-tight">JOINNEX SOLUTIONS</span>
+        <span class="text-charcoal-muted"> &nbsp;·&nbsp; Telecom Operations, Engineered.</span>
+      </div>
+    </div>
+    <div class="text-xs text-charcoal-muted">
+      © <span id="year"></span> JOINNEX Solutions. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+
+<!-- ====================== JAVASCRIPT ====================== -->
+<script>
+(function() {
+  'use strict';
+
+  // -------------------------------------------------------------------
+  // BRAND DATA
+  // -------------------------------------------------------------------
+  const BRANDS = [
+    { id: 'verizon', name: 'Verizon Wireless',   tag: 'National Carrier', color: '#CD040B' },
+    { id: 'att',     name: 'AT&T',               tag: 'National Carrier', color: '#00A8E0' },
+    { id: 'tmobile', name: 'T-Mobile',           tag: 'National Carrier', color: '#E20074' },
+    { id: 'visible', name: 'Visible',            tag: 'MVNO',             color: '#FFD200' },
+    { id: 'cricket', name: 'Cricket Wireless',   tag: 'Prepaid',          color: '#00B140' },
+    { id: 'total',   name: 'Total Wireless',     tag: 'Prepaid',          color: '#0033A0' },
+    { id: 'boost',   name: 'Boost Mobile',       tag: 'Prepaid',          color: '#F58220' },
+    { id: 'metro',   name: 'Metro by T-Mobile',  tag: 'Prepaid · Flagship', color: '#E20074', flagship: true },
+  ];
+
+  // -------------------------------------------------------------------
+  // SVG ICONS for services
+  // -------------------------------------------------------------------
+  const ICONS = {
+    surveillance: '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.46 12C3.73 7.94 7.52 5 12 5s8.27 2.94 9.54 7c-1.27 4.06-5.06 7-9.54 7s-8.27-2.94-9.54-7z"/></svg>',
+    shield:       '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l8 4v6c0 5-3.5 9.4-8 10-4.5-.6-8-5-8-10V6l8-4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>',
+    quality:      '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.6 5A9 9 0 1112 3a9 9 0 018.6 12z"/></svg>',
+    recruit:      '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+    reconcile:    '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m-6 4h6m-6 4h4M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"/></svg>',
+    inventory:    '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0v10l-8 4m8-14l-8 4m0 10V11m0 10l-8-4V7m8 4L4 7"/></svg>',
+    commissions:  '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M17 7h4v4"/></svg>',
+    automation:   '<svg class="w-6 h-6 text-magenta transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V5m6 14v-9m-3 9v-5M3 21h18M3 3h18"/></svg>',
+  };
+
+  // -------------------------------------------------------------------
+  // SERVICE DEFINITIONS
+  // -------------------------------------------------------------------
+  const BASE_SERVICES = [
+    { name: 'Live Surveillance',  icon: ICONS.surveillance, desc: 'Real-time camera feed monitoring with trained operators flagging suspicious activity instantly.' },
+    { name: 'Loss Prevention',    icon: ICONS.shield,       desc: 'Proactive shrinkage control, escalation protocols, and incident documentation.' },
+    { name: 'Quality Assurance',  icon: ICONS.quality,      desc: 'Mystery audits, KPI scoring, and corrective action workflows that drive measurable lift.' },
+    { name: 'Recruitment',        icon: ICONS.recruit,      desc: 'End-to-end hiring funnel: sourcing, screening, scheduling, and onboarding telecom-ready talent.' },
+  ];
+
+  const METRO_EXTENDED = [
+    ...BASE_SERVICES,
+    { name: 'Compensation Reconciliation', icon: ICONS.reconcile,   desc: 'Line-by-line audit of carrier compensation files against POS data — recover what you\'re owed.' },
+    { name: 'Inventory Ordering / Hardcount', icon: ICONS.inventory, desc: 'Demand-driven ordering plus scheduled hardcount audits to keep stock tight and theft-free.' },
+    { name: 'Commissions',                 icon: ICONS.commissions, desc: 'Accurate, on-time commission calculation and payout tracking for your sales floor.' },
+    { name: 'Automated Data Reporting',    icon: ICONS.automation,  desc: 'Custom portal, live dashboards, and scheduled email reports — your data, on autopilot.' },
+  ];
+
+  const SERVICES_BY_BRAND = {
+    verizon: BASE_SERVICES, att: BASE_SERVICES, tmobile: BASE_SERVICES,
+    visible: BASE_SERVICES, cricket: BASE_SERVICES, total: BASE_SERVICES,
+    boost: BASE_SERVICES,   metro:   METRO_EXTENDED,
+  };
+
+  // -------------------------------------------------------------------
+  // RENDER: Brand cards
+  // -------------------------------------------------------------------
+  const brandGrid = document.getElementById('brandGrid');
+  BRANDS.forEach(b => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.dataset.brand = b.id;
+    card.className = 'brand-card group text-left p-5 rounded-2xl bg-white border border-gray-200 shadow-card';
+    card.innerHTML = `
+      <div class="flex items-center justify-between">
+        <span class="brand-dot inline-block w-2.5 h-2.5 rounded-full" style="background:${b.color}"></span>
+        ${b.flagship ? '<span class="text-[10px] font-bold uppercase tracking-wider text-magenta bg-magenta/10 px-2 py-0.5 rounded-full">Flagship</span>' : ''}
+      </div>
+      <div class="mt-4 brand-name text-lg font-extrabold tracking-tight text-charcoal">${b.name}</div>
+      <div class="mt-1 brand-tag text-xs font-medium text-charcoal-muted uppercase tracking-wider">${b.tag}</div>
+    `;
+    card.addEventListener('click', () => setActiveBrand(b.id));
+    brandGrid.appendChild(card);
+  });
+
+  // -------------------------------------------------------------------
+  // RENDER: Service cards
+  // -------------------------------------------------------------------
+  const servicesGrid = document.getElementById('servicesGrid');
+  const activeBrandName = document.getElementById('activeBrandName');
+  const servicesCount = document.getElementById('servicesCount');
+
+  function renderServices(brandId) {
+    const brand = BRANDS.find(b => b.id === brandId);
+    const services = SERVICES_BY_BRAND[brandId] || BASE_SERVICES;
+
+    activeBrandName.textContent = brand.name;
+    servicesCount.textContent   = services.length;
+
+    // Clear and re-render with stagger
+    servicesGrid.innerHTML = '';
+    services.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'service-card fade-in group bg-white rounded-2xl border border-gray-100 p-6 shadow-card';
+      card.style.animationDelay = (i * 0.06) + 's';
+      card.innerHTML = `
+        <div class="service-icon-wrap w-12 h-12 rounded-xl bg-magenta/8 flex items-center justify-center transition-colors">
+          ${s.icon}
+        </div>
+        <h3 class="mt-5 text-lg font-extrabold tracking-tight text-charcoal">${s.name}</h3>
+        <p class="mt-2 text-sm text-charcoal-soft leading-relaxed">${s.desc}</p>
+        <div class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-magenta">
+          Included
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+      `;
+      servicesGrid.appendChild(card);
+    });
+  }
+
+  function setActiveBrand(brandId) {
+    document.querySelectorAll('.brand-card').forEach(el => {
+      el.classList.toggle('active', el.dataset.brand === brandId);
+    });
+    renderServices(brandId);
+  }
+
+  // Default active brand: Metro by T-Mobile
+  setActiveBrand('metro');
+
+  // -------------------------------------------------------------------
+  // ROI CALCULATOR
+  // -------------------------------------------------------------------
+  const slider          = document.getElementById('storesSlider');
+  const storesDisplay   = document.getElementById('storesDisplay');
+  const hoursSaved      = document.getElementById('hoursSaved');
+  const revenueSaved    = document.getElementById('revenueSaved');
+
+  function fmtMoney(n) {
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  function updateROI() {
+    const stores = parseInt(slider.value, 10);
+    // Realistic benchmark multipliers (per store / month):
+    //   - Hours saved: ~25 ops hours
+    //   - Revenue leakage prevented: ~$4,500
+    const hours   = stores * 25;
+    const revenue = stores * 4500;
+    storesDisplay.textContent = stores + (stores >= 50 ? '+' : '');
+    hoursSaved.textContent    = hours.toLocaleString('en-US');
+    revenueSaved.textContent  = fmtMoney(revenue);
+  }
+  slider.addEventListener('input', updateROI);
+  updateROI();
+
+  // -------------------------------------------------------------------
+  // STAT COUNTERS (animate on view)
+  // -------------------------------------------------------------------
+  function animateCounter(el) {
+    const target   = parseFloat(el.dataset.counter);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const suffix   = el.dataset.suffix || '';
+    const duration = 1400;
+    const start    = performance.now();
+
+    function tick(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      const val = target * eased;
+      el.textContent = (decimals ? val.toFixed(decimals) : Math.floor(val).toLocaleString('en-US')) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = (decimals ? target.toFixed(decimals) : target.toLocaleString('en-US')) + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+
+  // -------------------------------------------------------------------
+  // SCROLL REVEAL
+  // -------------------------------------------------------------------
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // -------------------------------------------------------------------
+  // CUSTOM MAGENTA SCROLLBAR
+  // -------------------------------------------------------------------
+  const thumb = document.getElementById('jx-scrollbar-thumb');
+  function updateScrollbar() {
+    const scrollTop    = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollHeight <= 0) { thumb.style.opacity = '0'; return; }
+    const ratio    = scrollTop / scrollHeight;
+    const thumbH   = Math.max(40, (window.innerHeight / document.documentElement.scrollHeight) * window.innerHeight);
+    const trackH   = window.innerHeight - thumbH;
+    thumb.style.height   = thumbH + 'px';
+    thumb.style.transform = `translateY(${ratio * trackH}px)`;
+    thumb.style.opacity   = scrollTop > 10 ? '1' : '0.4';
+  }
+  window.addEventListener('scroll', updateScrollbar, { passive: true });
+  window.addEventListener('resize', updateScrollbar);
+  updateScrollbar();
+
+  // -------------------------------------------------------------------
+  // QUOTE FORM SUBMISSION
+  // -------------------------------------------------------------------
+  const form    = document.getElementById('quoteForm');
+  const formMsg = document.getElementById('formMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    formMsg.className = 'mb-4 px-4 py-3 rounded-lg text-sm font-medium bg-gray-50 text-charcoal-soft';
+    formMsg.textContent = 'Sending your request…';
+    formMsg.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const out = await res.json();
+      if (res.ok) {
+        formMsg.className   = 'mb-4 px-4 py-3 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-100';
+        formMsg.textContent = out.message;
+        form.reset();
+      } else {
+        formMsg.className   = 'mb-4 px-4 py-3 rounded-lg text-sm font-medium bg-red-50 text-red-700 border border-red-100';
+        formMsg.textContent = out.message || 'Something went wrong. Please try again.';
+      }
+    } catch (err) {
+      formMsg.className   = 'mb-4 px-4 py-3 rounded-lg text-sm font-medium bg-red-50 text-red-700 border border-red-100';
+      formMsg.textContent = 'Network error. Please try again.';
+    }
+  });
+
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+
+</body>
+</html>
