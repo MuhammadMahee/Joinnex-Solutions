@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ARCHET — Operations Intelligence. No Compromises.</title>
-<meta name="description" content="ARCHET powers 900+ retail stores with live surveillance, loss prevention, reconciliation, and workforce operations across 8 major U.S. carriers, gas stations, and tuck shops."/>
+<meta name="description" content="ARCHET powers 900+ retail stores with live surveillance, loss prevention, reconciliation, and workforce operations across 8 major U.S. carriers, gas stations, and vape shops."/>
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -422,7 +422,7 @@ select.arc-input option { background: #0D0D20; color: #fff; }
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Boost Mobile</span><span class="mx-3 teal-text opacity-40">◆</span>
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Visible</span><span class="mx-3 teal-text opacity-40">◆</span>
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Total Wireless</span><span class="mx-3 teal-text opacity-40">◆</span>
-      <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Gas Stations &amp; Tuck Shops</span><span class="mx-3 teal-text opacity-40">◆</span>
+      <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Gas Stations &amp; Vape Shops</span><span class="mx-3 teal-text opacity-40">◆</span>
       <!-- duplicate -->
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Verizon Wireless</span><span class="mx-3 teal-text opacity-40">◆</span>
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">AT&amp;T</span><span class="mx-3 teal-text opacity-40">◆</span>
@@ -432,7 +432,7 @@ select.arc-input option { background: #0D0D20; color: #fff; }
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Boost Mobile</span><span class="mx-3 teal-text opacity-40">◆</span>
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Visible</span><span class="mx-3 teal-text opacity-40">◆</span>
       <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Total Wireless</span><span class="mx-3 teal-text opacity-40">◆</span>
-      <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Gas Stations &amp; Tuck Shops</span><span class="mx-3 teal-text opacity-40">◆</span>
+      <span class="mx-7 text-sm font-semibold whitespace-nowrap" style="color:rgba(255,255,255,.3)">Gas Stations &amp; Vape Shops</span><span class="mx-3 teal-text opacity-40">◆</span>
     </div>
   </div>
   <div class="gdiv mt-7"></div>
@@ -490,7 +490,7 @@ select.arc-input option { background: #0D0D20; color: #fff; }
 
     <div class="flex flex-wrap gap-3 mb-7 reveal">
       <button class="ind-tab active" data-filter="telecom">Telecom Carriers</button>
-      <button class="ind-tab" data-filter="retail">Gas Stations &amp; Tuck Shops</button>
+      <button class="ind-tab" data-filter="retail">Gas Stations &amp; Vape Shops</button>
     </div>
 
     <div id="brandGrid" class="reveal grid grid-cols-2 md:grid-cols-4 gap-3"></div>
@@ -634,7 +634,7 @@ select.arc-input option { background: #0D0D20; color: #fff; }
                 <option>Boost Mobile</option><option selected>Metro by T-Mobile</option>
               </optgroup>
               <optgroup label="Retail Operations">
-                <option>Gas Station / Tuck Shop</option>
+                <option>Gas Station / Vape Shop</option>
               </optgroup>
               <optgroup label="Digital Services">
                 <option>Website Development &amp; Design</option>
@@ -836,7 +836,7 @@ const TELECOM = [
   { id:'metro',   name:'Metro by T-Mobile', tag:'Prepaid · Flagship', color:'#E20074', flagship:true },
 ];
 const RETAIL = [
-  { id:'gas', name:'Gas Station & Tuck Shops', tag:'Retail Operations · USA', color:'#10B981' },
+  { id:'gas', name:'Gas Station & Vape Shops', tag:'Retail Operations · USA', color:'#10B981' },
 ];
 
 const ic = p => `<svg class="w-5 h-5 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${p}</svg>`;
@@ -867,7 +867,7 @@ const GAS_SVC = [
   { name:'24/7 Live Surveillance',          icon:ICONS.eye,   desc:'Round-the-clock monitoring of forecourt, convenience store, and back-office areas — every shift.' },
   { name:'Loss Prevention & Shrinkage',     icon:ICONS.shield,desc:'Dedicated theft deterrence, vendor compliance checks, and incident documentation to protect margins.' },
   { name:'Staff Recruitment & Vetting',     icon:ICONS.users, desc:'End-to-end hiring for cashiers, shift supervisors, and overnight staff — background-checked and ready.' },
-  { name:'Inventory & Stock Management',    icon:ICONS.box,   desc:'Demand-driven ordering, daily shelf audits, and shrink reconciliation to keep your tuck shop stocked.' },
+  { name:'Inventory & Stock Management',    icon:ICONS.box,   desc:'Demand-driven ordering, daily shelf audits, and shrink reconciliation to keep your vape shop stocked.' },
   { name:'Compliance & Safety Audits',      icon:ICONS.clip,  desc:'Age verification checks, safety protocol reviews, and regulatory compliance documentation per location.' },
   { name:'Shift Scheduling & Workforce',    icon:ICONS.cal,   desc:'Optimized shift scheduling, attendance tracking, and coverage management so no shift goes unstaffed.' },
   { name:'Revenue Reconciliation',          icon:ICONS.doc,   desc:'Cash drawer audits, fuel sales matching, and daily revenue reconciliation to catch every discrepancy.' },
