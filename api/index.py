@@ -106,7 +106,8 @@ def send_confirmation_email(to_email, to_name, company):
 
 # Resolve the absolute path of the directory this file lives in.
 # Both joinnex.py and index.html sit in this same directory.
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Go up one level from api/ to reach the repo root where index.html lives
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Disable Flask's default template_folder and static_folder so it does
 # NOT look for a /templates or /static directory at all.
