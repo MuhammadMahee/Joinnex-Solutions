@@ -278,6 +278,12 @@ select.arc-input option { background: #0D0D20; color: #fff; }
 
 /* ──────────────────────── BOTTOM CLIP ──────────────────────── */
 .bottom-clip { position: absolute; bottom: -1px; left: 0; right: 0; height: 80px; background: #030309; clip-path: ellipse(60% 100% at 50% 100%); }
+
+/* ──────────────────────── MOBILE: HIDE CUSTOM CURSOR ──────────────────────── */
+@media (max-width: 767px), (hover: none) {
+  #c-dot, #c-ring { display: none; }
+  body, a, button, .brand-card, .ind-tab { cursor: auto; }
+}
 </style>
 </head>
 <body>
@@ -599,19 +605,19 @@ select.arc-input option { background: #0D0D20; color: #fff; }
           <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:rgba(15,255,212,.07);border:1px solid rgba(15,255,212,.15)">
             <svg class="w-5 h-5" style="color:#0FFFD4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </div>
-          <div><div class="text-sm font-semibold text-white">Email</div><div class="text-sm" style="color:rgba(255,255,255,.35)">contact@archetsolutions.com</div></div>
+          <div><div class="text-sm font-semibold text-white">Email</div><div class="text-sm" style="color:rgba(255,255,255,.35)">Administrator.archetsolutions@gmail.com</div></div>
         </div>
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:rgba(15,255,212,.07);border:1px solid rgba(15,255,212,.15)">
             <svg class="w-5 h-5" style="color:#0FFFD4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.515l.91 3.64a2 2 0 01-.45 1.95L8.12 11.88a16 16 0 006 6l1.78-1.56a2 2 0 011.95-.45l3.64.91A2 2 0 0123 18.72V21a2 2 0 01-2 2A18 18 0 013 5z"/></svg>
           </div>
-          <div><div class="text-sm font-semibold text-white">Operations Hotline</div><div class="text-sm" style="color:rgba(255,255,255,.35)">Available 24 / 7 / 365</div></div>
+          <div><div class="text-sm font-semibold text-white">Contact Number</div><div class="text-sm" style="color:rgba(255,255,255,.35)">+1 (469) 993-7957</div></div>
         </div>
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18)">
-            <svg class="w-5 h-5" style="color:#F59E0B" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.6 5A9 9 0 1112 3a9 9 0 018.6 12z"/></svg>
+            <svg class="w-5 h-5" style="color:#F59E0B" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           </div>
-          <div><div class="text-sm font-semibold text-white">SLA-Backed</div><div class="text-sm" style="color:rgba(255,255,255,.35)">Contractually guaranteed response times.</div></div>
+          <div><div class="text-sm font-semibold text-white">Address</div><div class="text-sm" style="color:rgba(255,255,255,.35)">20727 Stone Oak Pkwy, San Antonio, TX 78258</div></div>
         </div>
       </div>
     </div>
