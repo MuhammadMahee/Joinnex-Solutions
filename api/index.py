@@ -3,19 +3,42 @@ ARCHET SOLUTIONS - Flask Backend Server
 Serves index.html directly from the root directory (no templates/static folders).
 """
 
-from flask import Flask, send_from_directory, request, jsonify, abort
+from flask import Flask, send_from_directory, request, jsonify
 import os
 import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime, timezone
+from html import escape
 
-EMAIL_FROM    = "Administrator.archetsolutions@gmail.com"
-EMAIL_APP_PWD = "yvos uriv ovqs rxkd"
+EMAIL_FROM = os.getenv("EMAIL_FROM", "Administrator.archetsolutions@gmail.com")
+EMAIL_TO = os.getenv("EMAIL_TO", EMAIL_FROM)
+EMAIL_APP_PWD = os.getenv("EMAIL_APP_PWD", "yvos uriv ovqs rxkd")
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "465"))
+
+
+def send_email(to_email, subject, html):
+    if not EMAIL_FROM or not EMAIL_APP_PWD:
+        raise RuntimeError("Email credentials are not configured.")
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = f"Archet Solutions <{EMAIL_FROM}>"
+    msg["To"] = to_email
+    msg.attach(MIMEText(html, "html"))
+    with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as srv:
+        srv.login(EMAIL_FROM, EMAIL_APP_PWD)
+        srv.sendmail(EMAIL_FROM, to_email, msg.as_string())
 
 
 def send_confirmation_email(to_email, to_name, company):
+    safe_name = escape(to_name)
+    safe_company = escape(company)
+    safe_email = escape(to_email)
+    first_name = escape((to_name.split() or ["there"])[0])
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,16 +80,16 @@ def send_confirmation_email(to_email, to_name, company):
   </div>
   <div class="body">
     <div class="badge">&#10003; Request Received</div>
-    <div class="greeting">Hi {to_name.split()[0]},</div>
+    <div class="greeting">Hi {first_name},</div>
     <p class="intro">
-      Thank you for reaching out to Archet Solutions. We've received your quote request for <strong>{company}</strong> and an Archet strategist will be in touch within <strong>one business day</strong> with a tailored proposal.
+      Thank you for reaching out to Archet Solutions. We've received your quote request for <strong>{safe_company}</strong> and an Archet strategist will be in touch within <strong>one business day</strong> with a tailored proposal.
     </p>
 
     <div class="card">
       <div class="card-title">Your submission summary</div>
-      <div class="card-row"><span class="card-label">Name</span><span class="card-val">{to_name}</span></div>
-      <div class="card-row"><span class="card-label">Company</span><span class="card-val">{company}</span></div>
-      <div class="card-row"><span class="card-label">Email</span><span class="card-val">{to_email}</span></div>
+      <div class="card-row"><span class="card-label">Name</span><span class="card-val">{safe_name}</span></div>
+      <div class="card-row"><span class="card-label">Company</span><span class="card-val">{safe_company}</span></div>
+      <div class="card-row"><span class="card-label">Email</span><span class="card-val">{safe_email}</span></div>
     </div>
 
     <div class="next-steps">
@@ -93,21 +116,84 @@ def send_confirmation_email(to_email, to_name, company):
 </html>"""
 
     try:
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "We received your quote request — Archet Solutions"
-        msg["From"]    = f"Archet Solutions <{EMAIL_FROM}>"
-        msg["To"]      = to_email
-        msg.attach(MIMEText(html, "html"))
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as srv:
-            srv.login(EMAIL_FROM, EMAIL_APP_PWD)
-            srv.sendmail(EMAIL_FROM, to_email, msg.as_string())
+        send_email(to_email, "We received your quote request - Archet Solutions", html)
     except Exception as exc:
         print(f"[email] Failed to send confirmation to {to_email}: {exc}")
+
+def send_lead_notification(record):
+    rows = "".join(
+        f"""
+        <tr>
+          <td style="padding:8px 12px;color:#5f6368;border-bottom:1px solid #e8eaed">{escape(label)}</td>
+          <td style="padding:8px 12px;color:#202124;border-bottom:1px solid #e8eaed;font-weight:600">{escape(value or "-")}</td>
+        </tr>
+        """
+        for label, value in [
+            ("Received", record["received_at"]),
+            ("Name", record["full_name"]),
+            ("Company", record["company"]),
+            ("Email", record["email"]),
+            ("Phone", record["phone"]),
+            ("Industry / Brand", record["brand"]),
+            ("Locations", record["stores"]),
+            ("Message", record["message"]),
+        ]
+    )
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:24px;background:#f1f3f4;font-family:Arial,sans-serif">
+  <div style="max-width:680px;margin:auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e8eaed">
+    <div style="background:#030309;color:#fff;padding:20px 24px">
+      <div style="font-size:18px;font-weight:700">New Archet quote request</div>
+      <div style="font-size:12px;color:#9aa0a6;margin-top:4px">Submitted from archetsolutions.com</div>
+    </div>
+    <div style="padding:20px 24px">
+      <table style="width:100%;border-collapse:collapse;font-size:14px">{rows}</table>
+    </div>
+  </div>
+</body>
+</html>"""
+
+    subject = f"New quote request: {record['company']} - {record['full_name']}"
+    send_email(EMAIL_TO, subject, html)
+
 
 # Resolve the absolute path of the directory this file lives in.
 # Both joinnex.py and index.html sit in this same directory.
 # Go up one level from api/ to reach the repo root where index.html lives
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def leads_backup_path():
+    configured_path = os.getenv("LEADS_FILE")
+    if configured_path:
+        return configured_path
+    if os.getenv("VERCEL"):
+        return os.path.join("/tmp", "archet-leads.json")
+    return os.path.join(BASE_DIR, "leads.json")
+
+
+def backup_lead(record):
+    leads_path = leads_backup_path()
+    try:
+        leads_dir = os.path.dirname(leads_path)
+        if leads_dir:
+            os.makedirs(leads_dir, exist_ok=True)
+
+        existing = []
+        if os.path.exists(leads_path):
+            with open(leads_path, "r", encoding="utf-8") as fh:
+                try:
+                    existing = json.load(fh)
+                except json.JSONDecodeError:
+                    existing = []
+
+        existing.append(record)
+        with open(leads_path, "w", encoding="utf-8") as fh:
+            json.dump(existing, fh, indent=2)
+    except OSError as exc:
+        print(f"[leads] Could not write backup to {leads_path}: {exc}")
+
 
 # Disable Flask's default template_folder and static_folder so it does
 # NOT look for a /templates or /static directory at all.
@@ -129,6 +215,11 @@ def home():
     return send_from_directory(BASE_DIR, "index.html")
 
 
+@app.route("/archet-logo.png", methods=["GET"])
+def logo():
+    return send_from_directory(BASE_DIR, "archet-logo.png")
+
+
 # ---------------------------------------------------------------------------
 # Route: Lead capture endpoint for the B2B quote form.
 # ---------------------------------------------------------------------------
@@ -136,7 +227,7 @@ def home():
 def submit_quote():
     """
     Accepts JSON or form-encoded data from the website's quote form.
-    Persists each submission to a local leads.json file (append-only).
+    Emails the lead to Archet and writes a best-effort local backup.
     """
     # Accept both JSON payloads (fetch) and standard form posts.
     payload = request.get_json(silent=True) or request.form.to_dict()
@@ -160,24 +251,16 @@ def submit_quote():
         "message":   payload.get("message", "").strip(),
     }
 
-    leads_path = os.path.join(BASE_DIR, "leads.json")
     try:
-        existing = []
-        if os.path.exists(leads_path):
-            with open(leads_path, "r", encoding="utf-8") as fh:
-                try:
-                    existing = json.load(fh)
-                except json.JSONDecodeError:
-                    existing = []
-        existing.append(record)
-        with open(leads_path, "w", encoding="utf-8") as fh:
-            json.dump(existing, fh, indent=2)
-    except OSError as exc:
+        send_lead_notification(record)
+    except Exception as exc:
+        print(f"[email] Failed to send lead notification: {exc}")
         return jsonify({
             "status": "error",
-            "message": f"Could not persist lead: {exc}"
+            "message": "We could not deliver your request. Please email Administrator.archetsolutions@gmail.com or call +1 (469) 993-7957."
         }), 500
 
+    backup_lead(record)
     send_confirmation_email(record["email"], record["full_name"], record["company"])
 
     return jsonify({
