@@ -10,6 +10,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "archet-logo.png",
+      "use": "@vercel/static"
+    },
+    {
       "src": "sitemap.xml",
       "use": "@vercel/static"
     },
@@ -21,6 +25,7 @@
   "routes": [
     { "src": "/api/(.*)",    "dest": "/api/index.py" },
     { "src": "/health",      "dest": "/api/index.py" },
+    { "src": "/archet-logo.png", "dest": "/archet-logo.png" },
     { "src": "/sitemap.xml", "dest": "/sitemap.xml"  },
     { "src": "/robots.txt",  "dest": "/robots.txt"   },
     { "src": "/",            "dest": "/index.html"   },
