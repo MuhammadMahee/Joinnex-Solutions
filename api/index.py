@@ -17,6 +17,8 @@ EMAIL_TO = os.getenv("EMAIL_TO", EMAIL_FROM)
 EMAIL_APP_PWD = os.getenv("EMAIL_APP_PWD", "yvos uriv ovqs rxkd")
 SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "465"))
+SITE_URL = os.getenv("SITE_URL", "https://archetsolutions.com").rstrip("/")
+LOGO_URL = os.getenv("LOGO_URL", f"{SITE_URL}/archet-logo-dark.png")
 
 
 def send_email(to_email, subject, html):
@@ -37,6 +39,7 @@ def send_confirmation_email(to_email, to_name, company):
     safe_name = escape(to_name)
     safe_company = escape(company)
     safe_email = escape(to_email)
+    safe_logo_url = escape(LOGO_URL, quote=True)
     first_name = escape((to_name.split() or ["there"])[0])
 
     html = f"""<!DOCTYPE html>
@@ -47,10 +50,8 @@ def send_confirmation_email(to_email, to_name, company):
 <style>
   body{{margin:0;padding:0;background:#f1f3f4;font-family:'Google Sans',Roboto,Arial,sans-serif}}
   .wrap{{max-width:600px;margin:32px auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08)}}
-  .header{{background:#030309;padding:28px 36px;display:flex;align-items:center;gap:12px}}
-  .logo-badge{{width:36px;height:36px;border-radius:10px;background:rgba(15,255,212,.12);border:1px solid rgba(15,255,212,.3);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0FFFD4;text-align:center;line-height:36px}}
-  .logo-text{{color:#fff;font-size:18px;font-weight:700;letter-spacing:-.3px}}
-  .logo-sub{{color:rgba(255,255,255,.35);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-top:1px}}
+  .header{{background:#030309;padding:22px 36px}}
+  .email-logo{{display:block;width:176px;max-width:100%;height:auto;border:0}}
   .body{{padding:36px 36px 28px}}
   .greeting{{font-size:20px;font-weight:500;color:#202124;margin-bottom:6px}}
   .intro{{font-size:14px;color:#5f6368;line-height:1.6;margin-bottom:24px}}
@@ -72,11 +73,7 @@ def send_confirmation_email(to_email, to_name, company):
 <body>
 <div class="wrap">
   <div class="header">
-    <div class="logo-badge">A</div>
-    <div>
-      <div class="logo-text">ARCHET</div>
-      <div class="logo-sub">Solutions</div>
-    </div>
+    <img src="{safe_logo_url}" width="176" height="119" alt="Archet Solutions" class="email-logo"/>
   </div>
   <div class="body">
     <div class="badge">&#10003; Request Received</div>
@@ -121,6 +118,7 @@ def send_confirmation_email(to_email, to_name, company):
         print(f"[email] Failed to send confirmation to {to_email}: {exc}")
 
 def send_lead_notification(record):
+    safe_logo_url = escape(LOGO_URL, quote=True)
     rows = "".join(
         f"""
         <tr>
@@ -145,6 +143,7 @@ def send_lead_notification(record):
 <body style="margin:0;padding:24px;background:#f1f3f4;font-family:Arial,sans-serif">
   <div style="max-width:680px;margin:auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e8eaed">
     <div style="background:#030309;color:#fff;padding:20px 24px">
+      <img src="{safe_logo_url}" width="170" height="115" alt="Archet Solutions" style="display:block;width:170px;max-width:100%;height:auto;border:0;margin-bottom:12px"/>
       <div style="font-size:18px;font-weight:700">New Archet quote request</div>
       <div style="font-size:12px;color:#9aa0a6;margin-top:4px">Submitted from archetsolutions.com</div>
     </div>
@@ -218,6 +217,11 @@ def home():
 @app.route("/archet-logo.png", methods=["GET"])
 def logo():
     return send_from_directory(BASE_DIR, "archet-logo.png")
+
+
+@app.route("/archet-logo-dark.png", methods=["GET"])
+def dark_logo():
+    return send_from_directory(BASE_DIR, "archet-logo-dark.png")
 
 
 # ---------------------------------------------------------------------------
